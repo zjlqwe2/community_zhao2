@@ -23,6 +23,14 @@ import java.util.UUID;
 public class AuthorizeController {
 
 
+    @Value("${github.client.id}")
+    private String clientId;
+
+    @Value("${github.client.secret}")
+    private String clientSecret;
+
+    @Value("${github.redirect.uri}")
+    private String redirectUri;
 
     @Autowired
     private GithubProvider githubProvider;
@@ -37,16 +45,14 @@ public class AuthorizeController {
         //获得access_token
         System.out.println("code是:   "+code);
         System.out.println("state是:   "+state);
-
+        System.out.println("clientSecret是:    "+clientSecret);
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
-        accessTokenDTO.setClient_id("53ac855ce094846fd090");
-        accessTokenDTO.setClient_secret("9d42873c506d4440cac2b907f2d4b7f822808e67");
+        accessTokenDTO.setClient_id(clientId);
+        accessTokenDTO.setClient_secret(clientSecret);
         accessTokenDTO.setCode(code);
-        accessTokenDTO.setRedirect_uri("http://localhost:8088/callback");
+        accessTokenDTO.setRedirect_uri(redirectUri);
         accessTokenDTO.setState(state);
         //利用access_token请求github的api获得登录信息(用户的登录信息)
-        githubProvider.getAccessToken(accessTokenDTO);
-
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         System.out.println("accessToken内容是(外层)"+accessToken);
 
