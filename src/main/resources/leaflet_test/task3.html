@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>基于Click事件的简单效果</title>
+    <link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <script src="leaflet/leaflet.js"></script>
+  <style>
+      #myMap {
+          height: 900px;
+      }
+  </style>
+</head>
+<body>
+    <div id="myMap"></div>
+  <script>
+
+    var mymap = L.map('myMap',{
+        center: [39.90,116.38],
+        zoom: 14
+    });
+
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: ' &copy; OpenStreetMap'
+    }).addTo(mymap);
+
+
+    //在地图中添加标记,使用添加Marker代码
+    var marker1 = L.marker([39.90,116.38]).addTo(mymap);
+    var marker2 = L.marker([39.992641, 116.352843]).addTo(mymap);
+
+    marker1.bindPopup('这是北京市').openPopup();
+
+    marker2.bindPopup('这是北京大学').openPopup();
+
+
+    //增加一个圈，设置圆心、半径、样式
+    var circle = L.circle([39.90,116.38], {
+        color: 'green',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 5000
+    }).addTo(mymap);
+    // 弹出框
+    circle.bindPopup('我是个圆');
+
+    //在地图绘制多边形
+    var polygon = L.polygon([
+        [39.99869, 116.332942],
+        [39.982119, 116.332355],
+        [39.984749, 116.374779],
+        [40.00132, 116.371015]
+    ],{
+        color: 'green',
+        fillColor: '#f03',
+        fillOpacity: 0.5
+    }).addTo(mymap);
+
+    // 单机事件
+    var mypop = L.popup();
+    mymap.on('click', function(e) {
+      var content = '您点击的位置是：<br>';
+      content += e.latlng.toString();
+      mypop.setLatLng(e.latlng)
+           .setContent(content)
+           .openOn(mymap);
+    });
+
+
+
+
+
+
+  </script>
+</body>
+</html>

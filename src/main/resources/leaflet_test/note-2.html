@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>使用自定义的MapBox</title>
+    <link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <script src="leaflet/leaflet.js"></script>
+  <style>
+    #map-container {
+        width: 600px;
+        height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map-container"></div>
+  <script>
+    var m = L.map('map-container').setView([36.52,120.31], 7);
+    L.tileLayer('https://api.mapbox.com/styles/v1/' +
+        'yqcim/cizh1ma3400ez2so5x1anhuzo/tiles/256/{z}/{x}/{y}?' +
+        'access_token=pk.eyJ1IjoieXFjaW0iLCJhIjoiY2l6ZmhnZjExMDBhajJ4cGxnNGN5MnhpdCJ9.' +
+        'pcZtdfk8mSFboCdwqkvW6g', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(m);
+
+
+    //在地图中添加标记,使用添加Marker代码
+    var marker = L.marker([36.52,120.31]).addTo(m);
+
+    //在地图上绘制圆形
+    var circle = L.circle([36.52,120.31], {
+        color: 'green',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 10000
+    }).addTo(m);
+
+    //在地图绘制多边形
+    var polygon = L.polygon([
+        [36, 121],
+        [37, 121],
+        [36.5, 122],
+        [36.5, 122.2]
+    ],{
+        color: 'green',
+        fillColor: '#f03',
+        fillOpacity: 0.5
+    }).addTo(m);
+
+  </script>
+</body>
+</html>

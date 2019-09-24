@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>绘制弹出框(Popup)</title>
+    <link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <script src="leaflet/leaflet.js"></script>
+  <style>
+    #map-container {
+      width: 600px;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map-container"></div>
+  <script>
+    var m = L.map('map-container').setView([36.52,120.31], 7);
+
+    var tileAddress = 'https://api.mapbox.com/styles/v1/yqcim/';
+    tileAddress += 'cizh1ma3400ez2so5x1anhuzo/tiles/256/{z}/{x}/{y}';
+    tileAddress += '?access_token=pk.eyJ1IjoieXFjaW0iLCJhIjoiY2l6ZmhnZjEx';
+    tileAddress += 'MDBhajJ4cGxnNGN5MnhpdCJ9.pcZtdfk8mSFboCdwqkvW6g';
+    
+    var attribution = 'Map data &copy; <a href="http://openstreetmap.org">';
+    attribution += 'OpenStreetMap</a> contributors, '
+    attribution += '<a href="http://creativecommons.org/licenses/by-sa/2.0/">';
+    attribution += 'CC-BY-SA</a>, ';
+    attribution += 'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+
+    L.tileLayer(tileAddress, {
+      maxZoom: 18,
+      attribution: attribution,
+      id: 'mapbox.streets'
+    }).addTo(m);
+
+    // add a marker
+    var marker = L.marker([36.52,120.31]).addTo(m);    
+    // popup
+    marker.bindPopup('这是个Marker').openPopup();
+    
+    // add a circle
+    var circle = L.circle([36.52,120.31], {
+      color: 'green',
+      fillColor: '#f03',
+      fillOpacity: 0.5,
+      radius: 10000
+    }).addTo(m);
+    // 弹出框
+    circle.bindPopup('我是个圆');
+
+    // add a polygon
+    var polygon = L.polygon([
+      [36, 121],
+      [37, 121],
+      [36.5, 122],
+      [36.5, 122.2]
+    ]).addTo(m);
+    // popup
+    polygon.bindPopup('俺是个多边形');
+
+
+    // try event
+    m.on('click', function(e) {
+        console.log(e);
+        alert('纬度：' + e.latlng.lat + '\n经度：' + e.latlng.lng);
+    });
+
+  </script>
+</body>
+</html>

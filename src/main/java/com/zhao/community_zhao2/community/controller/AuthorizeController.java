@@ -2,6 +2,7 @@ package com.zhao.community_zhao2.community.controller;
 
 
 import com.zhao.community_zhao2.community.dto.AccessTokenDTO;
+import com.zhao.community_zhao2.community.dto.GithubUser;
 import com.zhao.community_zhao2.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,19 +20,9 @@ import java.util.UUID;
  * Created by codedrinker on 2019/4/24.
  */
 @Controller
-//@Slf4j
 public class AuthorizeController {
 
 
-
-    @Value("${github.client.id}")
-    private String clientId;
-
-    @Value("${github.client.secret}")
-    private String clientSecret;
-
-    @Value("${github.redirect.uri}")
-    private String redirectUri;
 
     @Autowired
     private GithubProvider githubProvider;
@@ -41,19 +32,30 @@ public class AuthorizeController {
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "State") String state) {
+                           @RequestParam(name = "state") String state) {
+
+        //获得access_token
+        System.out.println("code是:   "+code);
+        System.out.println("state是:   "+state);
 
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
+        accessTokenDTO.setClient_id("53ac855ce094846fd090");
+        accessTokenDTO.setClient_secret("9d42873c506d4440cac2b907f2d4b7f822808e67");
+        accessTokenDTO.setCode(code);
+        accessTokenDTO.setRedirect_uri("http://localhost:8088/callback");
+        accessTokenDTO.setState(state);
+        //利用access_token请求github的api获得登录信息(用户的登录信息)
         githubProvider.getAccessToken(accessTokenDTO);
 
-//        AccessTokenDTO accessToken DTO = new AccessTokenDTO();
-//        accessTokenDTO.setClient_id(clientId);
-//        accessTokenDTO.setClient_secret(clientSecret);
-//        accessTokenDTO.setCode(code);
-//        accessTokenDTO.setRedirect_uri(redirectUri);
-//        accessTokenDTO.setState(state);
-//        String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-//        GithubUser githubUser = githubProvider.getUser(accessToken);
+        String accessToken = githubProvider.getAccessToken(accessTokenDTO);
+        System.out.println("accessToken内容是(外层)"+accessToken);
+
+        GithubUser githubUser = githubProvider.getUser(accessToken);
+        System.out.println("githubUser对象是:   "+githubUser);
+
+
+        System.out.println(githubUser.getName());
+//
 //        if (githubUser != null && githubUser.getId() != null) {
 //            User user = new User();
 //            String token = UUID.randomUUID().toString();
@@ -71,8 +73,7 @@ public class AuthorizeController {
 //            // 登录失败，重新登录
 //            return "redirect:/";
 //        }
-
-        return null;
+        return "index";
     }
 
     @GetMapping("/logout")
